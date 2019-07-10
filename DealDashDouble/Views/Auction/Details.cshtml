@@ -1,0 +1,159 @@
+﻿@model tbl_Auction
+
+
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="card mt-4">
+
+            @if (Model.tbl_AuctionPicture != null && Model.tbl_AuctionPicture.Count > 0)
+            {
+                var firstAuctionPicture = Model.tbl_AuctionPicture.First();
+
+                var i = 0;
+
+                <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+                    <ol class="carousel-indicators">
+
+                        @foreach (var item in Model.tbl_AuctionPicture)
+                        {
+                            var active = item == firstAuctionPicture ? "active" : string.Empty;
+
+                            <li class="@active" data-target="#carouselIndicators" data-slide-to="@i"></li>
+
+                            i++;
+                        }
+
+                    </ol>
+                    <div class="carousel-inner" role="listbox">
+
+                        @foreach (var item in Model.tbl_AuctionPicture)
+                        {
+
+                            var active = item == firstAuctionPicture ? "active" : string.Empty;
+
+                            var picUrl = "/Content/Image/" + item.tbl_Picture.URL;
+
+                            <div class="carousel-item @active">
+                                <img class="d-block img-fluid" src="@picUrl">
+                            </div>
+
+
+                        }
+
+
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            }
+            <div class="card-body">
+                <h3 class="card-title">@Model.Title</h3>
+                <h4>$@Model.ActualAmount</h4>
+                <p class="card-text">
+                    @Model.Description
+                </p>
+                <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+                4.0 stars
+            </div>
+        </div>
+        <!-- /.card -->
+        <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+                Product Reviews
+            </div>
+            <div class="card-body">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                <hr>
+
+                <form id="CommentForm">
+                    <input type="hidden" name="EntityID" value="23" />
+                    <input type="hidden" name="RecordID" value="@Model.AuctionID" />
+
+                    <div class="form-group">
+                        <label>Write Your Comment</label>
+                        <span class="text-warning float-right">
+                            <i class="ratingstar fa fa-star-o"data-value="1"></i>
+                            <i class="ratingstar fa fa-star-o"data-value="2"></i>
+                            <i class="ratingstar fa fa-star-o"data-value="3"></i>
+                            <i class="ratingstar fa fa-star-o"data-value="4"></i>
+                            <i class="ratingstar fa fa-star-o"data-value="5"></i>
+                            @*<i class="fa fa-star"></i>*@
+                        </span>
+                        
+                        <input type="hidden"name="Rating"id="ratingvalue"/>
+
+                        <textarea class="form-control" rows="3" name="Text" placeholder="Write Your Comments Here. "></textarea>
+                    </div>
+                    <button class="btn btn-success" id="btncomment">Leave your comment</button>
+                </form>
+
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-9 -->
+</div>
+
+<script>
+    $(".ratingstar").hover(function () {
+        $(".ratingstar").addClass(" fa-star-o").removeClass(" fa-star");
+
+        $(this).addClass(" fa-star").removeClass(" fa-star-o");
+        $(this).prevAll(".ratingstar").addClass(" fa-star").removeClass(" fa-star-o");
+    })
+
+    $(".ratingstar").click(function () {
+        debugger;
+        var starvalue = $(this).attr("data-value");
+
+        $("#ratingvalue").val(starvalue);
+    })
+
+
+
+
+    $("#btncomment").click(function () {
+
+        $.ajax({
+            url: "/Comment/LeaveComment",
+            method: "POST",
+            data: $("#CommentForm").serialize(),
+
+            success: function (data) {
+
+                debugger;
+
+                if (data.Success) {
+                    window.location.reload();
+                }
+                else {
+                    swal("Error!", data.Massage, "error");
+                }
+            },
+            error: function (err) {
+                swal("Error!", "Error Occured.Plase try again latter!", "error");
+            }
+
+
+        })
+
+    });
+
+</script>
+

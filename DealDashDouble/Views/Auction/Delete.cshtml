@@ -1,0 +1,16 @@
+﻿@model DealDashDouble.tbl_Auction
+
+<h2>Are You Sure You want to Delete This Auction</h2>
+
+<form method="post">
+    @Html.HiddenFor(m => m.AuctionID)
+    <button>
+        Yes 
+    </button>
+</form>
+
+<form method="get"action="/Auction">
+    <button>
+        No
+    </button>
+</form>

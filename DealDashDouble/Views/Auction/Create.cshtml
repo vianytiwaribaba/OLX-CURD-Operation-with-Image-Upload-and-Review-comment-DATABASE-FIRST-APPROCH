@@ -1,0 +1,115 @@
+﻿<h2>Create Auction</h2>
+
+<div>
+    <form method="post" action="/Auction/Create" id="createform">
+        <label>
+            Title
+        </label>
+        <input name="Title" />
+        <br />
+
+
+        <label>
+            Description
+        </label>
+        <input name="Description" />
+        <br />
+
+
+        <label>
+            ActualAmount
+        </label>
+        <input name="ActualAmount" />
+        <br />
+
+        <label>
+            StartingTime
+        </label>
+        <input name="StartingTime" />
+        <br />
+
+        <label>
+            EndingTime
+        </label>
+        <input name="EndingTime" />
+        <br />
+
+        <label>
+           Select Pictures
+        </label>
+        <input id="auctionPictures" name="tbl_AuctionPicture"type="file" multiple/>
+
+        <div id="pictureArea">
+
+        </div>
+        <input type="hidden" name="tbl_AuctionPicture" id="pictureIDs"/>
+        <br />
+
+
+        <button type="button" onclick="SaveBtnclick()">
+            Save
+        </button>
+
+    </form>
+</div>
+
+
+<script>
+    function SaveBtnclick() {
+       
+
+        $.ajax({
+            url:"/Auction/Create",
+            method: "POST",
+            data: $("#createform").serialize(),
+
+            success: function (data) {
+               
+                $("#listingArea").html(data)
+            },
+            error: function (err) {
+
+            }
+
+        })
+    }
+
+    $("#auctionPictures").change(function () {
+       
+        var pictures = this.files;
+
+        var picsData = new FormData();
+
+        for (var i = 0; i < pictures.length; i++) {
+            picsData.append("Picture", pictures[i]);
+        }
+
+        $.ajax({
+            url:"/Shared/UploadPictures",    
+            type: "POST",
+            data: picsData,
+            dataType: "json",
+            processData: false,
+            contentType: false,
+        })
+            .done(function (data) {
+                debugger;
+
+                var picIDs = '';
+
+                for (var i = 0; i < data.length; i++) {
+
+                    var picData = data[i];
+
+                    var imgHtml = "<img class='img-fluid' src='/Content/Image/" + picData.pictureURL + "' />";
+
+                    $("#pictureArea").append(imgHtml);
+
+                    picIDs = picIDs + "," + picData.ID;
+                }
+
+                $("#pictureIDs").val(picIDs);
+            });
+    });
+    
+</script>

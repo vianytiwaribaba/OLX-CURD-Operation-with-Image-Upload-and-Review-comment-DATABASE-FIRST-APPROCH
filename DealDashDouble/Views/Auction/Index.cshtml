@@ -1,0 +1,106 @@
+﻿@model List<tbl_Auction>
+
+<br /><br />
+<head>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+</head>
+
+
+<div id="listingArea">
+    <table class="table table-striped  table-responsive" id="listProduct">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Actual Amount</th>
+                <th>Starting Time</th>
+                <th>Ending Time</th>
+                <th>Picture</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" value="@item.AuctionID" />
+                        @item.Title
+                    </td>
+                    <td>@item.Description</td>
+                    <td>@item.ActualAmount</td>
+                    <td>@item.StartingTime</td>
+                    <td>@item.EndingTime</td>
+                    <td>@item.tbl_AuctionPicture.</td>
+                    <td>
+                        <a href="Edit/@item.AuctionID" class="btn btn-danger">Edit</a> ||
+                        <a href="Delete/@item.AuctionID" class="btn btn-info">Delete</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div>
+        <button class="btn btn-primary" onclick="Btnclick()">Create New Auction</button>
+    </div>
+
+
+    <div id="contentArea">
+
+    </div>
+
+    <script>
+       
+            $("#listProduct").DataTable();
+        
+
+
+        function Btnclick() {
+            alert("DOM IS ready???")
+
+            $.ajax({
+                url: "/Auction/Create",
+                method: "GET",
+                success: function (data) {
+
+                    $("#contentArea").html(data)
+                },
+                error: function (err) {
+
+                }
+
+            })
+        }
+    </script>
+
+    <script>
+        $(".editbtn").click(function () {
+
+            alert("DOM IS ready???")
+
+            $.ajax({
+                url: "/Auction/Edit",
+                method: "GET",
+                success: function (data) {
+
+                    $("#contentArea").html(data)
+                },
+                error: function (err) {
+
+                }
+
+            })
+        })
+
+    </script>
+
+</div>
+
+<br /><br /><br /><br />
+
+
